@@ -4,15 +4,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <vector>
+#include "../h/common.h"
 
 using namespace std;
-
-struct Sentence {
-    string key;
-    string value;
-};
-
-vector<Sentence> sentences;
 
 bool isPunctuator(char ch)					
 {
@@ -127,7 +121,7 @@ char* subString(char* realStr, int l, int r)
 
 void parse(char* str)
 {
-    Sentence s;
+    Token t;
 
     int left = 0, right = 0;
     int len = strlen(str);
@@ -141,10 +135,10 @@ void parse(char* str)
         {
             if (isOperator(str[right]) == true)
             {
-                s.key = "op";
-                s.value = str[right];
-                sentences.push_back(s);
-                cout << s.key << ": " << s.value <<"\n";
+                t.key = "op";
+                t.value = str[right];
+                tokens.push_back(t);
+                cout << t.key << ": " << t.value <<"\n";
             }
             right++;
             left = right;
@@ -155,24 +149,24 @@ void parse(char* str)
 
             if (isKeyword(sub) == true)
             {
-                s.key = "key";
-                s.value = sub;
-                sentences.push_back(s);
-                cout << s.key << ": " << s.value <<"\n";
+                t.key = "key";
+                t.value = sub;
+                tokens.push_back(t);
+                cout << t.key << ": " << t.value <<"\n";
             }
             else if (isNumber(sub) == true)
             {
-                s.key = "num";
-                s.value = sub;
-                sentences.push_back(s);
-                cout << s.key << ": " << s.value <<"\n";
+                t.key = "num";
+                t.value = sub;
+                tokens.push_back(t);
+                cout << t.key << ": " << t.value <<"\n";
             }
             else if (validIdentifier(sub) == true && isPunctuator(str[right - 1]) == false)
             {
-                s.key = "id";
-                s.value = sub;
-                sentences.push_back(s);
-                cout << s.key << ": " << s.value <<"\n";
+                t.key = "id";
+                t.value = sub;
+                tokens.push_back(t);
+                cout << t.key << ": " << t.value <<"\n";
             }
             else if (validIdentifier(sub) == false && isPunctuator(str[right - 1]) == false)
             {
