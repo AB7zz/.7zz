@@ -3,9 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+#include <vector>
 
 using namespace std;
+
+struct Sentence {
+    string key;
+    string value;
+};
+
+vector<Sentence> sentences;
 
 bool isPunctuator(char ch)					
 {
@@ -120,6 +127,8 @@ char* subString(char* realStr, int l, int r)
 
 void parse(char* str)
 {
+    Sentence s;
+
     int left = 0, right = 0;
     int len = strlen(str);
     while (right <= len && left <= right) {
@@ -132,7 +141,10 @@ void parse(char* str)
         {
             if (isOperator(str[right]) == true)
             {
-                std::cout<< str[right] <<" IS AN OPERATOR\n";
+                s.key = "op";
+                s.value = str[right];
+                sentences.push_back(s);
+                cout << s.key << ": " << s.value <<"\n";
             }
             right++;
             left = right;
@@ -143,15 +155,24 @@ void parse(char* str)
 
             if (isKeyword(sub) == true)
             {
-                cout<< sub <<" IS A KEYWORD\n";
+                s.key = "key";
+                s.value = sub;
+                sentences.push_back(s);
+                cout << s.key << ": " << s.value <<"\n";
             }
             else if (isNumber(sub) == true)
             {
-                cout<< sub <<" IS A NUMBER\n";
+                s.key = "num";
+                s.value = sub;
+                sentences.push_back(s);
+                cout << s.key << ": " << s.value <<"\n";
             }
             else if (validIdentifier(sub) == true && isPunctuator(str[right - 1]) == false)
             {
-                cout<< sub <<" IS A VALID IDENTIFIER\n";
+                s.key = "id";
+                s.value = sub;
+                sentences.push_back(s);
+                cout << s.key << ": " << s.value <<"\n";
             }
             else if (validIdentifier(sub) == false && isPunctuator(str[right - 1]) == false)
             {
