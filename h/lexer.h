@@ -3,18 +3,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stack>
 #include <vector>
-#include "../h/common.h"
+#include "./common.h"
 
 using namespace std;
 
+bool isSpace(char ch)					
+{
+    if (ch == ' ')
+    {
+        return true;
+    }
+    return false;
+}
+
 bool isPunctuator(char ch)					
 {
-    if (ch == ' ' || ch == '+' || ch == '-' || ch == '*' ||
-        ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
-        ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
-        ch == '[' || ch == ']' || ch == '{' || ch == '}' ||
-        ch == '&' || ch == '|')
+    if (ch == ')' || ch == '(' || ch == ',' || ch == ':')
     {
         return true;
     }
@@ -118,32 +124,55 @@ char* subString(char* realStr, int l, int r)
     return str;
 }
 
+bool checkPunctuatorClosing(stack<char> punctuators, char ch)
+{
+    if (punctuators.empty())
+    {
+        return false;
+    }
 
-void parse(char* str)
+    char top = punctuators.top();
+
+    if (top == '(' && ch == ')')
+    {
+        punctuators.pop();
+        return true;
+    }
+    return false;
+}
+
+
+vector<Token> lexer(char* str)
 {
     Token t;
+
+    vector<Token> tokens;
+
+    stack<char> punctuators;
 
     int left = 0, right = 0;
     int len = strlen(str);
     while (right <= len && left <= right) {
-        if (isPunctuator(str[right]) == false)
+
+        if (isSpace(str[right]) == false)
         {
+            if(isPunctuator(str[right]) == true){
+                t.key = "punc";
+                t.value = str[right];
+                tokens.push_back(t);
+                punctuators.push(str[right]);
+                left++;
+            }
             right++;
         }
 
-        if (isPunctuator(str[right]) == true && left == right)
+        
+        if (isSpace(str[right]) == true && left == right)
         {
-            if (isOperator(str[right]) == true)
-            {
-                t.key = "op";
-                t.value = str[right];
-                tokens.push_back(t);
-                cout << t.key << ": " << t.value <<"\n";
-            }
             right++;
             left = right;
         } 
-        else if (isPunctuator(str[right]) == true && left != right || (right == len && left != right)) 			
+        else if ((isSpace(str[right]) == true || checkPunctuatorClosing(punctuators, str[right])) && (left != right || (right == len && left != right))) 			
         {
             char* sub = subString(str, left, right - 1);
 
@@ -152,35 +181,31 @@ void parse(char* str)
                 t.key = "key";
                 t.value = sub;
                 tokens.push_back(t);
-                cout << t.key << ": " << t.value <<"\n";
+            }
+            else if (isOperator(str[left]) == true)
+            {
+                t.key = "op";
+                t.value = str[left];
+                tokens.push_back(t);
             }
             else if (isNumber(sub) == true)
             {
                 t.key = "num";
                 t.value = sub;
                 tokens.push_back(t);
-                cout << t.key << ": " << t.value <<"\n";
             }
-            else if (validIdentifier(sub) == true && isPunctuator(str[right - 1]) == false)
+            else if (validIdentifier(sub) == true && isSpace(str[right - 1]) == false)
             {
                 t.key = "id";
                 t.value = sub;
                 tokens.push_back(t);
-                cout << t.key << ": " << t.value <<"\n";
             }
-            else if (validIdentifier(sub) == false && isPunctuator(str[right - 1]) == false)
+            else if (validIdentifier(sub) == false && isSpace(str[right - 1]) == false)
             {
                 cout<< sub <<" IS NOT A VALID IDENTIFIER\n";
             }
             left = right;
         }
     }
-    return;
-}
-
-int main()
-{
-    char c[100] = "num c = 10 + 20";
-    parse(c);
-    return 0;
+    return tokens;
 }

@@ -7,5 +7,3 @@ struct Token {
     string key;
     string value;
 };
-
-vector<Token> tokens;
