@@ -72,7 +72,8 @@ bool isKeyword(char *str)
         !strcmp(str, "ret") || !strcmp(str, "fun")    ||
         !strcmp(str, "wh")  || !strcmp(str, "for")    ||
         !strcmp(str, "num") || !strcmp(str, "str")    ||
-        !strcmp(str, "bool")
+        !strcmp(str, "bool")|| !strcmp(str, "or")     ||
+        !strcmp(str, "and") || !strcmp(str, "not")    
     )
     {
         return true;
@@ -152,7 +153,9 @@ vector<Token> lexer(char* str)
 
     int left = 0, right = 0;
     int len = strlen(str);
-    while (right <= len && left <= right) {
+    while (len > 0 && right <= len && left <= right) {
+
+        
 
         if (isSpace(str[right]) == false)
         {
@@ -172,7 +175,7 @@ vector<Token> lexer(char* str)
             right++;
             left = right;
         } 
-        else if ((isSpace(str[right]) == true || checkPunctuatorClosing(punctuators, str[right])) && (left != right || (right == len && left != right))) 			
+        else if ((isSpace(str[right]) == true || checkPunctuatorClosing(punctuators, str[right]) || isPunctuator(str[right])) && (left != right || (right == len && left != right))) 			
         {
             char* sub = subString(str, left, right - 1);
 
