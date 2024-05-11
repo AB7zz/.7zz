@@ -56,11 +56,6 @@ int main(int argc, char* argv[]) {
         outputFile << "using namespace std;" << endl;
         outputFile << endl;
 
-        outputFile << "int main() {" << endl;
-        outputFile << "    cout<<\"lol\"<<endl;" << endl;
-        outputFile << "    return 0;" << endl;
-        outputFile << "}" << endl;
-
         outputFile.close();
     } else {
         cerr << "Error: Unable to open dummy.cpp for writing." << endl;

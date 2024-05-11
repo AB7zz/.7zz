@@ -66,7 +66,10 @@ bool isKeyword(char *str)
         !strcmp(str, "for") || !strcmp(str, "end")    ||
         !strcmp(str, "num") || !strcmp(str, "str")    ||
         !strcmp(str, "bool")|| !strcmp(str, "or")     ||
-        !strcmp(str, "and") || !strcmp(str, "not")
+        !strcmp(str, "and") || !strcmp(str, "not")    ||
+        !strcmp(str, "is")  || !strcmp(str, "else")   ||
+        !strcmp(str, "elif")|| !strcmp(str, "void")   ||
+        !strcmp(str, "main")
     )
     {
         return true;
@@ -135,20 +138,36 @@ bool checkPunctuatorClosing(stack<char> punctuators, char ch)
     return false;
 }
 
+char* stripWhiteSpace(char* str) {
+    int i = 0;
+    while (isSpace(str[i])){
+        str++;
+    }
+
+    return str;
+}
+
 vector<Token> lexer(char* str)
 {
     Token t;
 
     vector<Token> tokens;
 
+    char* result = stripWhiteSpace(str);
+
+    if(strcmp(result, "end") == 0)
+    {
+        t.key = "key";
+        t.value = "end";
+        tokens.push_back(t);
+        return tokens;
+    }
+
     stack<char> punctuators;
 
     int left = 0, right = 0;
     int len = strlen(str);
     while (len > 0 && right <= len && left <= right) {
-
-        
-
         if (isSpace(str[right]) == false)
         {
             if(isPunctuator(str[right]) == true){
@@ -202,5 +221,6 @@ vector<Token> lexer(char* str)
             left = right;
         }
     }
+    
     return tokens;
 }

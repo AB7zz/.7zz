@@ -13,7 +13,6 @@ class Keyword {
 class Identifier {
     public:
         void toTarget(string value);
-        string findTarget(string value);
 };
 
 class Operator {
@@ -28,3 +27,7 @@ class Punctuator {
         string findTarget(string value);
 };
 
+class Number {
+    public:
+        void toTarget(string value);
+};

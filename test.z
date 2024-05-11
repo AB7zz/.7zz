@@ -1,9 +1,12 @@
 num factorial(num n):
-    if (n = 0 or n = 1):
+    if (n is 0 or n is 1):
         ret (1)
     end
     else:
         ret (n * factorial(n - 1))
     end
 end
-out (factorial(5))
+
+main:
+    out factorial(5)
+end
