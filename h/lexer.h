@@ -1,13 +1,8 @@
-#include <fstream>
-#include <iostream>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include <stack>
-#include <vector>
-#include "./common.h"
-
-using namespace std;
+#include <string>
+#include <cstring>
+#include <iostream>
+#include "common.h"
 
 bool isSpace(char ch);
 

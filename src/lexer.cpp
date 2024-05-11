@@ -1,10 +1,3 @@
-#include <fstream>
-#include <iostream>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <stack>
-#include <vector>
 #include "../h/lexer.h"
 
 using namespace std;
@@ -69,11 +62,11 @@ bool isKeyword(char *str)
 {
     if (!strcmp(str, "imp") || !strcmp(str, "out")    || 
         !strcmp(str, "in")  || !strcmp(str, "if")     ||
-        !strcmp(str, "ret") || !strcmp(str, "fun")    ||
-        !strcmp(str, "wh")  || !strcmp(str, "for")    ||
+        !strcmp(str, "ret") || !strcmp(str, "wh")     || 
+        !strcmp(str, "for") || !strcmp(str, "end")    ||
         !strcmp(str, "num") || !strcmp(str, "str")    ||
         !strcmp(str, "bool")|| !strcmp(str, "or")     ||
-        !strcmp(str, "and") || !strcmp(str, "not")    
+        !strcmp(str, "and") || !strcmp(str, "not")
     )
     {
         return true;

@@ -1,6 +1,9 @@
-fun factorial(n):
-    if (n == 0 or n == 1):
+num factorial(num n):
+    if (n = 0 or n = 1):
         ret (1)
+    end
     else:
         ret (n * factorial(n - 1))
+    end
+end
 out (factorial(5))
