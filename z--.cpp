@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include "h/lexer.h"
+#include <memory>
 
 using namespace std;
 
@@ -33,6 +34,7 @@ int main(int argc, char* argv[]) {
 
     vector<vector<Token>> allTokens;
 
+    // Lexer 
     for (const auto& line : lines) {
         char* lineStr = const_cast<char*>(line.c_str());
         vector<Token> tks = lexer(lineStr);
@@ -45,6 +47,14 @@ int main(int argc, char* argv[]) {
         }
         cout << "End of line" << endl;
     }
+    // Lexer
+
+
+    // Parser
+    for (const auto& tks : allTokens) {
+        
+    }
+    // Parser
 
     return 0;
 }

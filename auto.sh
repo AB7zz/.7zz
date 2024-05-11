@@ -1,3 +1,3 @@
-g++ -o z--.exe z--.cpp
+g++ z--.cpp src/lexer.cpp -o z--.exe
 
 z-- test.z
