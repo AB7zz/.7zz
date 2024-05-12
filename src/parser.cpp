@@ -37,7 +37,6 @@ bool parser(vector<Token> tks){
     vector<string> values;
 
     for (const Token& token : tks) {
-        // cout<<token.key<<" "<<token.value<<endl;
         State state = stringToState(token.key);
         switch (state){
             case 0:

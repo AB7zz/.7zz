@@ -5,12 +5,15 @@
 #include <cstring>
 #include <memory>
 #include <cstdlib>
+#include <chrono>
 #include "h/lexer.h"
 #include "h/parser.h"
 
 using namespace std;
+using namespace std::chrono;
 
 int main(int argc, char* argv[]) {
+    auto start = high_resolution_clock::now();
     if (argc < 2) {
         cerr << "Usage: ab7 filename" << endl;
         return 1;
@@ -73,6 +76,11 @@ int main(int argc, char* argv[]) {
     system("g++ dummy.cpp -o dummy.exe");
     system("dummy.exe");
     // Compile and execute
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+
+    cout << "\nExecution Time: " << duration.count() << " microseconds" << endl;
 
     return 0;
 }
