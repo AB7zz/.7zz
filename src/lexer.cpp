@@ -11,9 +11,18 @@ bool isSpace(char ch)
     return false;
 }
 
+bool isSemicolon(char ch)					
+{
+    if (ch == ';')
+    {
+        return true;
+    }
+    return false;
+}
+
 bool isPunctuator(char ch)					
 {
-    if (ch == ')' || ch == '(' || ch == ',' || ch == ':')
+    if (ch == ')' || ch == '(' || ch == ',' || ch == ':' || ch == '"')
     {
         return true;
     }
@@ -69,7 +78,7 @@ bool isKeyword(char *str)
         !strcmp(str, "and") || !strcmp(str, "not")    ||
         !strcmp(str, "is")  || !strcmp(str, "else")   ||
         !strcmp(str, "elif")|| !strcmp(str, "void")   ||
-        !strcmp(str, "main")
+        !strcmp(str, "main")|| !strcmp(str, "<-")
     )
     {
         return true;
@@ -153,15 +162,15 @@ vector<Token> lexer(char* str)
 
     vector<Token> tokens;
 
-    char* result = stripWhiteSpace(str);
+    // char* result = stripWhiteSpace(str);
 
-    if(strcmp(result, "end") == 0)
-    {
-        t.key = "key";
-        t.value = "end";
-        tokens.push_back(t);
-        return tokens;
-    }
+    // if(strcmp(result, "end") == 0)
+    // {
+    //     t.key = "key";
+    //     t.value = "end";
+    //     tokens.push_back(t);
+    //     return tokens;
+    // }
 
     stack<char> punctuators;
 
@@ -186,7 +195,7 @@ vector<Token> lexer(char* str)
             right++;
             left = right;
         } 
-        else if ((isSpace(str[right]) == true || checkPunctuatorClosing(punctuators, str[right]) || isPunctuator(str[right])) && (left != right || (right == len && left != right))) 			
+        else if ((isSpace(str[right]) == true || checkPunctuatorClosing(punctuators, str[right]) || isPunctuator(str[right]) || right == len || isSemicolon(str[right]) == true) && (left != right || (right == len && left != right))) 			
         {
             char* sub = subString(str, left, right - 1);
 

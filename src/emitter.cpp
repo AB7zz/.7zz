@@ -35,6 +35,8 @@ string Keyword::findTarget(string value){
         return "else if";
     }else if (value == "main"){
         return "int main()";
+    }else if(value == "<-"){
+        return "=";
     }
     
     return value;
@@ -42,7 +44,7 @@ string Keyword::findTarget(string value){
 
 void Keyword::toTarget(string value) {
     ofstream outputFile;
-    outputFile.open("dummy.cpp", ios::app);
+    outputFile.open("output.cpp", ios::app);
 
     string cpp = findTarget(value);
 
@@ -56,7 +58,7 @@ void Keyword::toTarget(string value) {
 
 void Identifier::toTarget(string value){
     ofstream outputFile;
-    outputFile.open("dummy.cpp", ios::app);
+    outputFile.open("output.cpp", ios::app);
 
     if (outputFile.is_open()) {
         outputFile << value;
@@ -67,9 +69,7 @@ void Identifier::toTarget(string value){
 }
 
 string Punctuator::findTarget(string value){
-    if (value == ","){
-        return ";";
-    }else if(value == ":"){
+    if(value == ":"){
         return "{";
     }
     
@@ -78,7 +78,7 @@ string Punctuator::findTarget(string value){
 
 void Punctuator::toTarget(string value){
     ofstream outputFile;
-    outputFile.open("dummy.cpp", ios::app);
+    outputFile.open("output.cpp", ios::app);
 
     string cpp = findTarget(value);
 
@@ -92,7 +92,7 @@ void Punctuator::toTarget(string value){
 
 void Number::toTarget(string value){
     ofstream outputFile;
-    outputFile.open("dummy.cpp", ios::app);
+    outputFile.open("output.cpp", ios::app);
 
     if (outputFile.is_open()) {
         outputFile << value;
@@ -104,7 +104,7 @@ void Number::toTarget(string value){
 
 void Operator::toTarget(string value){
     ofstream outputFile;
-    outputFile.open("dummy.cpp", ios::app);
+    outputFile.open("output.cpp", ios::app);
 
     if (outputFile.is_open()) {
         outputFile << value;

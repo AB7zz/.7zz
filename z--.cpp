@@ -46,22 +46,16 @@ int main(int argc, char* argv[]) {
     // Lexer
 
     // init file
-    ofstream outputFile("dummy.cpp");
+    ofstream outputFile("output.cpp");
 
     if (outputFile.is_open()) {
-        outputFile << "#include <iostream>" << endl;
-        outputFile << "#include <string>" << endl;
-        outputFile << "#include <vector>" << endl;
-        outputFile << "#include <fstream>" << endl;
-        outputFile << "#include <sstream>" << endl;
-        outputFile << endl;
 
         outputFile << "using namespace std;" << endl;
         outputFile << endl;
 
         outputFile.close();
     } else {
-        cerr << "Error: Unable to open dummy.cpp for writing." << endl;
+        cerr << "Error: Unable to open output.cpp for writing." << endl;
     }
     // init file
 
@@ -73,8 +67,9 @@ int main(int argc, char* argv[]) {
     // Parser
 
     // Compile and execute
-    system("g++ dummy.cpp -o dummy.exe");
-    system("dummy.exe");
+    system("g++ output.cpp -o output.exe");
+    system("output.exe");
+    // system("rm -f output.exe output.cpp");
     // Compile and execute
 
     auto stop = high_resolution_clock::now();

@@ -1,5 +1,5 @@
-#include <iostream>
-#include <stdlib.h>
 using namespace std;
 
-int factorial(int n){if (n == 0 || n == 1){return 1;}else{return n*factorial(n-1);}}int main(){cout<<factorial(5)<<endl;}
+#include "iostream"
+#include "stdio.h"
+bool something(int a){for (int i= 0;i<a;i++){cout<< i;cout<< '\n';} return (true);} int main() {int a;bool b;a= 5;b= something(a);cout<< b;} 

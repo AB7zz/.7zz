@@ -20,7 +20,25 @@ State stringToState(const string& str) {
 
 bool semicolonKeyword(const vector<string>& values) {
     for (const auto& value : values) {
-        if (value == "ret" || value == "out" || value == "in") {
+        if (value == "ret" || value == "out" || value == "in" || value == "num" || value == "str" || value == "bool" || value == "<-") {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool nextlineKeyword(const vector<string>& values){
+    for (const auto& value: values){
+        if(value == "imp"){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool specialKeyword(const vector<string>& values){
+    for (const auto& value: values){
+        if(value == "ret"){
             return true;
         }
     }
@@ -36,7 +54,34 @@ bool parser(vector<Token> tks){
 
     vector<string> values;
 
+    bool keyPresent = false, idPresent = false, puncPresent = false, funcPresent = false, assignmentPresent = false, specialPresent = false;
+
     for (const Token& token : tks) {
+        cout<<token.key<<' '<<token.value<<endl;
+
+        if (!specialPresent){
+            specialPresent = specialKeyword(values);
+        }
+
+        if (token.key == "key"){
+            keyPresent = true;
+            if(token.value == "<-"){
+                assignmentPresent = true;
+            }
+        }
+
+        if ((!assignmentPresent) && token.key == "id" && idPresent == false){
+            idPresent = true;
+        }
+
+        if((!assignmentPresent) && token.key == "punc" && puncPresent == false){
+            puncPresent = true;
+        }
+
+        if (keyPresent && idPresent && puncPresent){
+            funcPresent = true;
+        }
+
         State state = stringToState(token.key);
         switch (state){
             case 0:
@@ -58,12 +103,23 @@ bool parser(vector<Token> tks){
         }
     }
 
-    if (semicolonKeyword(values)){
+    if ((!funcPresent || specialPresent) && semicolonKeyword(values)){
         ofstream outputFile;
-        outputFile.open("dummy.cpp", ios::app);
+        outputFile.open("output.cpp", ios::app);
 
         if (outputFile.is_open()) {
             outputFile << ";";
+            outputFile.close();
+        } else {
+            cerr<< "Unable to open file!"<<endl;
+        }
+    }
+    if(nextlineKeyword(values)){
+        ofstream outputFile;
+        outputFile.open("output.cpp", ios::app);
+
+        if (outputFile.is_open()) {
+            outputFile << endl;
             outputFile.close();
         } else {
             cerr<< "Unable to open file!"<<endl;
