@@ -2,7 +2,10 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <cstdlib>
 #include "common.h"
+
+using namespace std;
 
 bool isSpace(char ch);
 
@@ -20,4 +23,4 @@ char* subString(char* realStr, int l, int r);
 
 bool checkPunctuatorClosing(stack<char> punctuators, char ch);
 
-vector<Token> lexer(char* str);
+vector<Token> lexer(char* str, int line, stack<char> punctuators);

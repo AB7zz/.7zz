@@ -37,6 +37,14 @@ string Keyword::findTarget(string value){
         return "int main()";
     }else if(value == "<-"){
         return "=";
+    }else if(value == "lt"){
+        return "<";
+    }else if(value == "lte"){
+        return "<=";
+    }else if(value == "gt"){
+        return ">";
+    }else if(value == "gte"){
+        return ">=";
     }
     
     return value;

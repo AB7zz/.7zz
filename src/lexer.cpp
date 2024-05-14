@@ -1,6 +1,5 @@
 #include "../h/lexer.h"
-
-using namespace std;
+#include "../h/errors/lexer.h"
 
 bool isSpace(char ch)					
 {
@@ -22,23 +21,34 @@ bool isSemicolon(char ch)
 
 bool isPunctuator(char ch)					
 {
-    if (ch == ')' || ch == '(' || ch == ',' || ch == ':' || ch == '"')
+    if (ch == ')' || ch == '(' || ch == ':' || ch == '"')
     {
         return true;
     }
     return false;
 }
 
-bool validIdentifier(char* str)						
+bool isUnrecognizedChar(char ch, int line, int pos)
+{
+    if (ch == '?' || ch == '!' || ch == '@' || ch == '#' || ch == '$' || ch == '^' || ch == '&' || ch == '<' || ch == '>' || ch == '=')
+    {
+        lexerError.UnrecognizedChar(&ch, 0, 0);
+        exit(EXIT_FAILURE);
+    }
+    return false;
+}
+
+bool validIdentifier(char* str, int line, int pos)						
 {
     if (str[0] == '0' || str[0] == '1' || str[0] == '2' ||
         str[0] == '3' || str[0] == '4' || str[0] == '5' ||
         str[0] == '6' || str[0] == '7' || str[0] == '8' ||
         str[0] == '9' || isPunctuator(str[0]) == true)
     {
-        return false;
+        lexerError.InvalidIdentifier(str, line, pos-1);
+        exit(EXIT_FAILURE);
     }									
-    int i,len = strlen(str);
+    int i, len = strlen(str);
     if (len == 1)
     {
         return true;
@@ -47,7 +57,8 @@ bool validIdentifier(char* str)
     {
         for (i = 1 ; i < len ; i++)	
         {
-            if (isPunctuator(str[i]) == true)
+            isUnrecognizedChar(str[i], line, pos);
+            if (isPunctuator(str[i]))
             {
                 return false;
             }
@@ -59,8 +70,7 @@ bool validIdentifier(char* str)
 bool isOperator(char ch)
 {
     if (ch == '+' || ch == '-' || ch == '*' ||
-        ch == '/' || ch == '>' || ch == '<' ||
-        ch == '=' || ch == '|' || ch == '&')
+        ch == '/')
     {
        return true;
     }
@@ -78,7 +88,9 @@ bool isKeyword(char *str)
         !strcmp(str, "and") || !strcmp(str, "not")    ||
         !strcmp(str, "is")  || !strcmp(str, "else")   ||
         !strcmp(str, "elif")|| !strcmp(str, "void")   ||
-        !strcmp(str, "main")|| !strcmp(str, "<-")
+        !strcmp(str, "main")|| !strcmp(str, "<-")     ||
+        !strcmp(str, "lt")|| !strcmp(str, "lte")      ||
+        !strcmp(str, "gt")|| !strcmp(str, "gte")      
     )
     {
         return true;
@@ -139,7 +151,7 @@ bool checkPunctuatorClosing(stack<char> punctuators, char ch)
 
     char top = punctuators.top();
 
-    if (top == '(' && ch == ')')
+    if ( (top == '(' && ch == ')') || (top == ':' && ch == '}') || (top == '"' && ch == '"') )
     {
         punctuators.pop();
         return true;
@@ -147,35 +159,14 @@ bool checkPunctuatorClosing(stack<char> punctuators, char ch)
     return false;
 }
 
-char* stripWhiteSpace(char* str) {
-    int i = 0;
-    while (isSpace(str[i])){
-        str++;
-    }
-
-    return str;
-}
-
-vector<Token> lexer(char* str)
+vector<Token> lexer(char* str, int line, stack<char> punctuators)
 {
     Token t;
 
     vector<Token> tokens;
 
-    // char* result = stripWhiteSpace(str);
+    int left = 0, right = 0, len = strlen(str);
 
-    // if(strcmp(result, "end") == 0)
-    // {
-    //     t.key = "key";
-    //     t.value = "end";
-    //     tokens.push_back(t);
-    //     return tokens;
-    // }
-
-    stack<char> punctuators;
-
-    int left = 0, right = 0;
-    int len = strlen(str);
     while (len > 0 && right <= len && left <= right) {
         if (isSpace(str[right]) == false)
         {
@@ -204,6 +195,9 @@ vector<Token> lexer(char* str)
                 t.key = "key";
                 t.value = sub;
                 tokens.push_back(t);
+                if(strcmp(sub, "end") == 0){
+                    punctuators.push('}');
+                }
             }
             else if (isOperator(str[left]) == true)
             {
@@ -217,15 +211,16 @@ vector<Token> lexer(char* str)
                 t.value = sub;
                 tokens.push_back(t);
             }
-            else if (validIdentifier(sub) == true && isSpace(str[right - 1]) == false)
+            else if (validIdentifier(sub, line, right) == true && isSpace(str[right - 1]) == false)
             {
                 t.key = "id";
                 t.value = sub;
                 tokens.push_back(t);
             }
-            else if (validIdentifier(sub) == false && isSpace(str[right - 1]) == false)
+            else if (validIdentifier(sub, line, right) == false && isSpace(str[right - 1]) == false)
             {
-                cout<< sub <<" IS NOT A VALID IDENTIFIER\n";
+                lexerError.InvalidIdentifier(sub, line, right);
+                exit(EXIT_FAILURE);
             }
             left = right;
         }

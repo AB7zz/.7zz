@@ -2,7 +2,7 @@ imp "iostream"
 imp "stdio.h"
 
 bool something(num a):
-    for (num i <- 0; i < a; i++):
+    for (num i <- 0; i lt a; i++):
         out i
         out '\n'
     end

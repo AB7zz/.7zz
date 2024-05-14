@@ -8,9 +8,12 @@
 #include <chrono>
 #include "h/lexer.h"
 #include "h/parser.h"
+#include "h/errors/lexer.h"
 
 using namespace std;
 using namespace std::chrono;
+
+LexerError lexerError;
 
 int main(int argc, char* argv[]) {
     auto start = high_resolution_clock::now();
@@ -38,10 +41,18 @@ int main(int argc, char* argv[]) {
     vector<vector<Token>> allTokens;
 
     // Lexer 
+    int lineNo = 1;
+    stack<char> punctuators;
     for (const auto& line : lines) {
         char* lineStr = const_cast<char*>(line.c_str());
-        vector<Token> tks = lexer(lineStr);
+        vector<Token> tks = lexer(lineStr, lineNo, punctuators);
         allTokens.push_back(tks);
+        lineNo++;
+    }
+    if(!punctuators.empty())
+    {
+        lexerError.UnclosedPunc(punctuators.top());
+        exit(EXIT_FAILURE);
     }
     // Lexer
 
