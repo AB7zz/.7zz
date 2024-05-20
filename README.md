@@ -9,7 +9,7 @@ This is a custom programming language which is way easier to code and understand
 
 ```
 # import
-imp "file.ab7"
+imp "file.z"
 
 
 # output
